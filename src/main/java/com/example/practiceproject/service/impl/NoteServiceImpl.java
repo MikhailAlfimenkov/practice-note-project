@@ -7,6 +7,8 @@ import com.example.practiceproject.dto.UpdateNoteTextRequest;
 import com.example.practiceproject.entity.Author;
 import com.example.practiceproject.entity.Note;
 import com.example.practiceproject.enums.Status;
+import com.example.practiceproject.exception.NoteNotFoundException;
+import com.example.practiceproject.exception.AuthorNotFound;
 import com.example.practiceproject.mapper.NoteMapper;
 import com.example.practiceproject.repository.AuthorRepository;
 import com.example.practiceproject.repository.NoteRepository;
@@ -31,7 +33,7 @@ public class NoteServiceImpl implements NoteService {
     @Transactional
     public NoteResponse createNote(CreationNoteRequest request){
         Author author = authorRepository
-                .findAuthorByFullName(request.getAuthorName(), request.getAuthorSurname())
+                .findByNameAndSurname(request.getAuthorName(), request.getAuthorSurname())
                 .orElseGet(() -> {
                     Author newAuthor = new Author();
                     newAuthor.setId(UUID.randomUUID());
@@ -67,7 +69,7 @@ public class NoteServiceImpl implements NoteService {
     @Transactional
     public NoteResponse updateNoteStatus(UUID id, UpdateNoteStatusRequest request){
         Note note = noteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Note not found with id: " + id));
+                .orElseThrow(() -> new NoteNotFoundException(id));
         note.setStatus(request.getStatus());
         if(request.getStatus() == Status.COMPLETED){
             note.setCompletedAt(LocalDateTime.now());
@@ -82,7 +84,7 @@ public class NoteServiceImpl implements NoteService {
     @Transactional
     public NoteResponse updateNoteText(UUID id, UpdateNoteTextRequest request){
         Note note = noteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Note not found with id: " + id));
+                .orElseThrow(() -> new NoteNotFoundException(id));
         note.setText(request.getText());
 
         Note updatedNote = noteRepository.save(note);
@@ -98,6 +100,15 @@ public class NoteServiceImpl implements NoteService {
         noteRepository.deleteById(id);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<NoteResponse> getNotesByAuthorId(UUID authorId){
+        if (!authorRepository.existsById(authorId)) {
+            throw new AuthorNotFound(authorId);
+        }
+        List<Note> notes = noteRepository.findByAuthorId(authorId);
+        return noteMapper.toResponseList(notes);
+    }
 
 
 }

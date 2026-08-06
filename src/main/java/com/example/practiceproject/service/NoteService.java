@@ -20,5 +20,7 @@ public interface NoteService {
 
     NoteResponse updateNoteText(UUID id, UpdateNoteTextRequest request);
 
+    List<NoteResponse> getNotesByAuthorId(UUID authorId);
+
     void deleteNote(UUID id);
 }

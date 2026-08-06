@@ -54,5 +54,10 @@ public class NoteController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/author/{authorId}")
+    public ResponseEntity<List<NoteResponse>> getNotesByAuthorId(@PathVariable UUID authorId) {
+        return ResponseEntity.ok(noteService.getNotesByAuthorId(authorId));
+    }
+
 
 }

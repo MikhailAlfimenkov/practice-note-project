@@ -38,14 +38,4 @@ public class Note {
     @Column(name = "text_value", nullable = false, columnDefinition = "TEXT")
     private String text;
 
-
-//    поля которые должны быть:
-//    id
-//    статус выполненного или невыполненного задания
-//    когда добавлено задание
-//    когда выполнено
-//    автор задания
-    // само задание текст
-
-
 }
