@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -16,7 +17,7 @@ public class NoteResponse {
     private UUID id;
     private String text;
     private Status status;
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     private LocalDateTime completedAt;
     private String authorName;
     private String authorSurname;

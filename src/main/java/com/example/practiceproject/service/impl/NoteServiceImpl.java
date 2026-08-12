@@ -7,8 +7,8 @@ import com.example.practiceproject.dto.UpdateNoteTextRequest;
 import com.example.practiceproject.entity.Author;
 import com.example.practiceproject.entity.Note;
 import com.example.practiceproject.enums.Status;
-import com.example.practiceproject.exception.NoteNotFoundException;
 import com.example.practiceproject.exception.AuthorNotFound;
+import com.example.practiceproject.exception.NoteNotFoundException;
 import com.example.practiceproject.mapper.NoteMapper;
 import com.example.practiceproject.repository.AuthorRepository;
 import com.example.practiceproject.repository.NoteRepository;
@@ -44,7 +44,6 @@ public class NoteServiceImpl implements NoteService {
         Note note = noteMapper.toEntity(request);
         note.setId(UUID.randomUUID());
         note.setStatus(Status.IN_PROGRESS);
-        note.setCreatedAt(LocalDateTime.now());
         note.setAuthor(author);
 
         Note savedNote = noteRepository.save(note);
@@ -61,7 +60,7 @@ public class NoteServiceImpl implements NoteService {
     @Transactional
     public NoteResponse getNoteById(UUID id){
         Note note = noteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Note not found with id: " + id));
+                .orElseThrow(() -> new NoteNotFoundException(id));
                 return noteMapper.toResponse(note);
     }
 
@@ -95,7 +94,7 @@ public class NoteServiceImpl implements NoteService {
     @Transactional
     public void deleteNote(UUID id){
         if(!noteRepository.existsById(id)){
-            throw new RuntimeException("Note not found with id: " + id);
+            throw new NoteNotFoundException(id);
         }
         noteRepository.deleteById(id);
     }
@@ -109,6 +108,5 @@ public class NoteServiceImpl implements NoteService {
         List<Note> notes = noteRepository.findByAuthorId(authorId);
         return noteMapper.toResponseList(notes);
     }
-
 
 }

@@ -7,8 +7,6 @@ import com.example.practiceproject.dto.UpdateNoteTextRequest;
 import com.example.practiceproject.service.NoteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,43 +19,37 @@ public class NoteController {
     private final NoteService noteService;
 
     @PostMapping
-    public ResponseEntity<NoteResponse> createNote(@Valid @RequestBody CreationNoteRequest request){
-        return ResponseEntity.status(HttpStatus.CREATED).body(noteService.createNote(request));
+    public NoteResponse createNote(@Valid @RequestBody CreationNoteRequest request) {
+        return noteService.createNote(request);
     }
 
     @GetMapping
-    public ResponseEntity<List<NoteResponse>> getAllNotes() {
-        return ResponseEntity.ok(noteService.getAllNotes());
+    public List<NoteResponse> getAllNotes() {
+        return noteService.getAllNotes();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<NoteResponse> getNoteById(@PathVariable UUID id){
-        return ResponseEntity.ok(noteService.getNoteById(id));
+    public NoteResponse getNoteById(@PathVariable UUID id) {
+        return noteService.getNoteById(id);
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<NoteResponse> updateNoteStatus(
-            @PathVariable UUID id,
-            @Valid @RequestBody UpdateNoteStatusRequest request){
-        return ResponseEntity.ok(noteService.updateNoteStatus(id, request));
+    public NoteResponse updateNoteStatus(@PathVariable UUID id, @Valid @RequestBody UpdateNoteStatusRequest request) {
+        return noteService.updateNoteStatus(id, request);
     }
 
     @PatchMapping("/{id}/text")
-    public ResponseEntity<NoteResponse> updateNoteText(
-            @PathVariable UUID id,
-            @Valid @RequestBody UpdateNoteTextRequest request){
-        return ResponseEntity.ok(noteService.updateNoteText(id,request));
+    public NoteResponse updateNoteText(@PathVariable UUID id, @Valid @RequestBody UpdateNoteTextRequest request) {
+        return noteService.updateNoteText(id, request);
     }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteNote(@PathVariable UUID id){
+    public void deleteNote(@PathVariable UUID id) {
         noteService.deleteNote(id);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/author/{authorId}")
-    public ResponseEntity<List<NoteResponse>> getNotesByAuthorId(@PathVariable UUID authorId) {
-        return ResponseEntity.ok(noteService.getNotesByAuthorId(authorId));
+    public List<NoteResponse> getNotesByAuthorId(@PathVariable UUID authorId) {
+        return noteService.getNotesByAuthorId(authorId);
     }
-
-
 }

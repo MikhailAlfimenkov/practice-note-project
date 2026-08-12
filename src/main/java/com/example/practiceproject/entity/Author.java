@@ -27,13 +27,4 @@ public class Author {
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Note> note = new ArrayList<>();
-
-//    должны быть колонки:
-//    id
-//    имя
-//    фамилия
-//    список notes one to many
-//
-
-
 }
