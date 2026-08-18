@@ -1,0 +1,10 @@
+services:
+  postgres:
+    image: 'postgres:15-alpine'
+    container_name: todo-list-db
+    environment:
+      - 'POSTGRES_DB=notedatabase'
+      - 'POSTGRES_PASSWORD=159753'
+      - 'POSTGRES_USER=user'
+    ports:
+      - '5432:5432'
