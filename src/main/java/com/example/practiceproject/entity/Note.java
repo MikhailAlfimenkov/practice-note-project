@@ -19,6 +19,7 @@ import java.util.UUID;
 public class Note {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Enumerated(EnumType.STRING)

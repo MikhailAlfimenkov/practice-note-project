@@ -4,9 +4,11 @@ import com.example.practiceproject.dto.CreationNoteRequest;
 import com.example.practiceproject.dto.NoteResponse;
 import com.example.practiceproject.dto.UpdateNoteStatusRequest;
 import com.example.practiceproject.dto.UpdateNoteTextRequest;
+import com.example.practiceproject.enums.Status;
 import com.example.practiceproject.service.NoteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +25,7 @@ public class NoteController {
         return noteService.createNote(request);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<NoteResponse> getAllNotes() {
         return noteService.getAllNotes();
     }
@@ -51,5 +53,18 @@ public class NoteController {
     @GetMapping("/author/{authorId}")
     public List<NoteResponse> getNotesByAuthorId(@PathVariable UUID authorId) {
         return noteService.getNotesByAuthorId(authorId);
+    }
+
+    @GetMapping
+    public Page<NoteResponse> getNotes(
+            @RequestParam(required = false) Status status,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String author,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "DESC") String sortDir
+    ) {
+        return noteService.getFilteredNotes(status, search, author, page, size, sortBy, sortDir);
     }
 }

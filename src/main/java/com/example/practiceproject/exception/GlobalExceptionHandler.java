@@ -2,6 +2,7 @@ package com.example.practiceproject.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -36,4 +37,21 @@ public class GlobalExceptionHandler {
                 parameterName, invalidValue, requiredType));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> hadleValidationException(MethodArgumentNotValidException ex) {
+        Map<String, Object> body = new HashMap<>();
+        Map<String, String> fieldErrors = new HashMap<>();
+
+        ex.getBindingResult().getFieldErrors().forEach(error -> fieldErrors.put(error.getField(), error.getDefaultMessage()
+        ));
+
+        body.put("timestamp", LocalDateTime.now().toString());
+        body.put("errorCode", HttpStatus.BAD_REQUEST.value());
+        body.put("message", "validation failed");
+        body.put("errors", fieldErrors);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
 }

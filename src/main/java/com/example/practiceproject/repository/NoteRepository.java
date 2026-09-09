@@ -2,12 +2,13 @@ package com.example.practiceproject.repository;
 
 import com.example.practiceproject.entity.Note;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface NoteRepository extends JpaRepository<Note, UUID> {
+public interface NoteRepository extends JpaRepository<Note, UUID>, JpaSpecificationExecutor<Note> {
     List<Note> findByAuthorId(UUID authorId);
 }
