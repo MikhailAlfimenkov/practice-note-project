@@ -14,6 +14,7 @@ import com.example.practiceproject.repository.AuthorRepository;
 import com.example.practiceproject.repository.NoteRepository;
 import com.example.practiceproject.repository.NoteSpecification;
 import com.example.practiceproject.service.NoteService;
+import com.example.practiceproject.starter.service.AuditLoggerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +35,7 @@ public class NoteServiceImpl implements NoteService {
     private final NoteRepository noteRepository;
     private final AuthorRepository authorRepository;
     private final NoteMapper noteMapper;
+    private final AuditLoggerService auditLoggerService;
 
     @Override
     @Transactional
@@ -42,17 +44,18 @@ public class NoteServiceImpl implements NoteService {
                 .findByNameAndSurname(request.getAuthorName(), request.getAuthorSurname())
                 .orElseGet(() -> {
                     Author newAuthor = new Author();
-                    //newAuthor.setId(UUID.randomUUID());
                     newAuthor.setName(request.getAuthorName());
                     newAuthor.setSurname(request.getAuthorSurname());
                     return authorRepository.save(newAuthor);
                 });
         Note note = noteMapper.toEntity(request);
-        //note.setId(UUID.randomUUID());
         note.setStatus(Status.IN_PROGRESS);
         note.setAuthor(author);
 
         Note savedNote = noteRepository.save(note);
+
+        auditLoggerService.logAction("CREATE_NOTE", "Creating note with ID: " + savedNote.getId());
+
         return noteMapper.toResponse(savedNote);
     }
 
