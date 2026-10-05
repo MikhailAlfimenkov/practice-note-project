@@ -1,5 +1,6 @@
 package com.example.practiceproject.dto;
 
+import com.example.practiceproject.validation.NotContainsWords;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -13,6 +14,7 @@ public class CreationNoteRequest {
 
     @NotBlank(message = "Text must not be blank")
     @Size(min = 3, message = "Text must contain at least 3 characters.")
+    @NotContainsWords
     private String text;
 
     @NotBlank(message = "Authors name must not be blank")

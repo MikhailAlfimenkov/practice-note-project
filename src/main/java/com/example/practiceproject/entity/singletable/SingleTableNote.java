@@ -1,5 +1,6 @@
-package com.example.practiceproject.entity;
+package com.example.practiceproject.entity.singletable;
 
+import com.example.practiceproject.entity.Author;
 import com.example.practiceproject.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,12 +12,14 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity
+//@Entity
 @Setter
 @Getter
 @NoArgsConstructor
-@Table(name = "notes")
-public class Note {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "note_type")
+@Table(name = "st_notes")
+public abstract class SingleTableNote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

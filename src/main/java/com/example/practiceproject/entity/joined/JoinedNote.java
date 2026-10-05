@@ -1,5 +1,6 @@
-package com.example.practiceproject.entity;
+package com.example.practiceproject.entity.joined;
 
+import com.example.practiceproject.entity.Author;
 import com.example.practiceproject.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,16 +12,28 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity
+//@Entity
 @Setter
 @Getter
 @NoArgsConstructor
-@Table(name = "notes")
-public class Note {
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "note_type")
+@Table(name = "joined_notes")
+public abstract class JoinedNote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false)
+    private Instant createdAt;
+
+    @Column(name = "completed_at")
+    private LocalDateTime completedAt;
+
+    @Column(name = "text_value", nullable = false, columnDefinition = "TEXT")
+    private String text;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -29,15 +42,5 @@ public class Note {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     private Author author;
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
-
-    @Column(name = "complete_at")
-    private LocalDateTime completedAt;
-
-    @Column(name = "text_value", nullable = false, columnDefinition = "TEXT")
-    private String text;
 
 }

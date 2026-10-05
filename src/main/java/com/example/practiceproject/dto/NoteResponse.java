@@ -19,6 +19,6 @@ public class NoteResponse {
     private Status status;
     private Instant createdAt;
     private LocalDateTime completedAt;
-    private String authorName;
-    private String authorSurname;
+    private String name;
+    private String surname;
 }
